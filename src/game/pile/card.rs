@@ -6,11 +6,10 @@ pub enum Suit {
     Diamond,
 }
 
-#[derive(PartialEq)]
-#[derive(Clone)]
+#[derive(PartialEq, Clone)]
 pub enum Color {
     Red,
-    Black
+    Black,
 }
 
 #[derive(Clone)]
@@ -32,7 +31,7 @@ impl Card {
             value: val,
             suit: s,
             color: col,
-            face_up: false
+            face_up: false,
         }
     }
 

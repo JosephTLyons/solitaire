@@ -120,8 +120,8 @@ impl Game {
                 }
 
                 None => {
-                     println!("Input needs to be a single integer");
-                     should_continue = true;
+                    println!("Input needs to be a single integer");
+                    should_continue = true;
                 }
             }
         }
@@ -147,7 +147,7 @@ impl Game {
                     Ok(val) => Some(val),
                     Err(_) => None,
                 }
-            },
+            }
             Err(_) => None,
         }
     }
@@ -163,11 +163,7 @@ impl Game {
         }
     }
 
-    fn move_card(&self) {
-
-    }
-
-
+    fn move_card(&self) {}
 
     fn move_to_flip_pile_is_ok(&self, card_on_top: &Card, card_on_bottom: &Card) -> bool {
         if card_on_top.get_value() == card_on_bottom.get_value() - 1 {
