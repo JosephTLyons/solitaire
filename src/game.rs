@@ -2,6 +2,7 @@ mod pile;
 
 use pile::*;
 use std::io;
+
 enum Actions {
     CycleCards,
     MoveCard,
