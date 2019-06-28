@@ -101,29 +101,20 @@ impl Game {
     }
 
     pub fn take_turn(&mut self) {
-        let mut should_continue = true;
-
-        while should_continue {
+        loop {
             self.print_action_menu();
             let input = self.get_integer_input();
 
             match input {
-                Some(n) => {
-                    match n {
-                        1 => self.cycle_cards(),
-                        2 => self.move_card(),
-                        3 => {}
-                        4 => {}
-                        _ => {} // This will never occur
-                    }
+                1 => self.cycle_cards(),
+                2 => self.move_card(),
+                3 => {},
+                4 => {},
+                _ => println!("Input needs to be a single integer 1 - 4"),
+            }
 
-                    should_continue = false;
-                }
-
-                None => {
-                    println!("Input needs to be a single integer");
-                    should_continue = true;
-                }
+            if input != 0 {
+                break;
             }
         }
     }
@@ -138,18 +129,18 @@ impl Game {
     }
 
     // Returns 0 if input is bad
-    fn get_integer_input(&self) -> Option<u8> {
+    fn get_integer_input(&self) -> u8 {
         let mut input = String::new();
 
         match io::stdin().read_line(&mut input) {
             Ok(_) => {
                 input.remove(input.len() - 1);
                 match input.parse::<u8>() {
-                    Ok(val) => Some(val),
-                    Err(_) => None,
+                    Ok(val) => val,
+                    Err(_) => 0,
                 }
             }
-            Err(_) => None,
+            Err(_) => 0,
         }
     }
 
