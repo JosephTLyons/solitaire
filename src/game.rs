@@ -203,7 +203,7 @@ impl Game {
         // Print pointer to useable card from deck
         println!("            ^");
 
-        for i in 0..flip_pile_print_count {
+        for i in (0..flip_pile_print_count).rev() {
             println!(
                 "                  {:3} {:3} {:3} {:3} {:3} {:3} {:3}",
                 self.flip_piles[0].get_card_string(i),
