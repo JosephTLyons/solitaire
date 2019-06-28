@@ -4,7 +4,7 @@ use pile::*;
 use std::io;
 
 enum Actions {
-    CycleCards,
+    NextThreeCards,
     MoveCard,
     NewGame,
     Quit,
@@ -101,19 +101,20 @@ impl Game {
     }
 
     pub fn take_turn(&mut self) {
+        self.print_action_menu();
+
         loop {
-            self.print_action_menu();
             let input = self.get_integer_input();
 
             match input {
-                1 => self.cycle_cards(),
+                1 => self.next_three_cards(),
                 2 => self.move_card(),
-                3 => {},
-                4 => {},
+                3 => {}
+                4 => {}
                 _ => println!("Input needs to be a single integer 1 - 4"),
             }
 
-            if input != 0 {
+            if 0 < input && input <= 4 {
                 break;
             }
         }
@@ -122,7 +123,7 @@ impl Game {
     fn print_action_menu(&self) {
         println!("Action Menu");
         println!("===========");
-        println!("1: Cycle Cards");
+        println!("1: Next Three Cards");
         println!("2: Move Card");
         println!("3: New Game");
         println!("4: Quit");
@@ -144,7 +145,7 @@ impl Game {
         }
     }
 
-    fn cycle_cards(&mut self) {
+    fn next_three_cards(&mut self) {
         for _ in 0..self.temp_deck.get_pile_size() {
             let mut card = self.temp_deck.remove_from_bottom().unwrap();
             card.flip_card_down();
@@ -155,15 +156,90 @@ impl Game {
         }
     }
 
-    fn move_card(&self) {}
+    fn move_card(&self) {
+        self.print_move_card_menu();
 
-    fn move_to_flip_pile_is_ok(&self, card_on_top: &Card, card_on_bottom: &Card) -> bool {
-        if card_on_top.get_value() == card_on_bottom.get_value() - 1 {
-            if card_on_top.get_color() != card_on_bottom.get_color() {
-                return true;
+        let mut from: Option<&Pile>;
+
+        loop {
+            from = self.get_pile_reference();
+
+            if from.is_some() {
+                break;
+            } else {
+                println!("Input needs to be a single integer 1 - 12")
             }
         }
 
+        let mut to: Option<&Pile>;
+
+        loop {
+            to = self.get_pile_reference();
+
+            if to.is_some() {
+                break;
+            } else {
+                println!("Input needs to be a single integer 1 - 12")
+            }
+        }
+
+        if self.move_is_valid(from.unwrap(), to.unwrap()) {
+            // move_card_from_to(from, to);
+        }
+    }
+
+    fn get_pile_reference(&self) -> Option<&Pile> {
+        match self.get_integer_input() {
+            1 => Some(&self.deck),
+            2 => Some(&self.flip_piles[0]),
+            3 => Some(&self.flip_piles[1]),
+            4 => Some(&self.flip_piles[2]),
+            5 => Some(&self.flip_piles[3]),
+            6 => Some(&self.flip_piles[4]),
+            7 => Some(&self.flip_piles[5]),
+            8 => Some(&self.flip_piles[6]),
+            9 => Some(&self.deposit_piles[0]),
+            10 => Some(&self.deposit_piles[1]),
+            11 => Some(&self.deposit_piles[2]),
+            12 => Some(&self.deposit_piles[3]),
+            _ => None,
+        }
+    }
+
+    fn print_move_card_menu(&self) {
+        println!("Move card from:");
+        println!("===============");
+        println!("1: Deck");
+        println!("2: Flip Pile 1");
+        println!("3: Flip Pile 2");
+        println!("4: Flip Pile 3");
+        println!("5: Flip Pile 4");
+        println!("6: Flip Pile 5");
+        println!("7: Flip Pile 6");
+        println!("8: Flip Pile 7");
+        println!("9: Deposit Pile 1");
+        println!("10: Deposit Pile 2");
+        println!("11: Deposit Pile 3");
+        println!("12: Deposit Pile 4");
+    }
+
+    fn move_is_valid(&self, from_pile: &Pile, to_pile: &Pile) -> bool {
+        // if from_pile == to_pile {
+        //     return true;
+        // }
+        //
+        // // Case of moving to deposit pile, (same suit, ascending)
+        // else if true {
+        //
+        // }
+        //
+        // // Case of moving to flip pile, (alternating colors, descending)
+        // else if card_on_top.get_value() == card_on_bottom.get_value() - 1 {
+        //     if card_on_top.get_color() != card_on_bottom.get_color() {
+        //         return true;
+        //     }
+        // }
+        //
         false
     }
 
