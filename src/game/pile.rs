@@ -24,24 +24,6 @@ impl Pile {
         self.pile[pos].is_flipped_up()
     }
 
-    pub fn make_pile_the_main_deck(&mut self) {
-        for i in 1..14 {
-            self.pile.push_back(Card::new(i, Suit::Spade));
-        }
-
-        for i in 1..14 {
-            self.pile.push_back(Card::new(i, Suit::Heart));
-        }
-
-        for i in 1..14 {
-            self.pile.push_back(Card::new(i, Suit::Club));
-        }
-
-        for i in 1..14 {
-            self.pile.push_back(Card::new(i, Suit::Diamond));
-        }
-    }
-
     pub fn shuffle(&mut self) {
         let mut rng = rand::thread_rng();
         let mut rand_num;

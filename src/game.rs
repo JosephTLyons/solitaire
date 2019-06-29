@@ -1,6 +1,9 @@
 mod pile;
+mod deck;
 
 use pile::*;
+use deck::*;
+
 use std::io;
 
 enum Actions {
@@ -41,7 +44,7 @@ enum To {
 }
 
 pub struct Game {
-    deck: Pile,
+    deck: Deck,
     temp_deck: Pile,
     deposit_piles: Vec<Pile>,
     flip_piles: Vec<Pile>,
@@ -50,9 +53,8 @@ pub struct Game {
 impl Game {
     pub fn new() -> Self {
         // Set up deck
-        let mut dec: Pile = Pile::new();
-        dec.make_pile_the_main_deck();
-        dec.shuffle();
+        let mut dec: Deck = Deck::new();
+        dec.pile.shuffle();
 
         // Set up deposit piles
         let mut deposit_p: Vec<Pile> = Vec::new();
@@ -72,7 +74,7 @@ impl Game {
             for j in i..flip_p.len() {
                 // In this case, I know that there will always be enough cards to remove from the
                 // dec, so it can be unwrapped
-                flip_p[j].add_to_top(dec.remove_from_top().unwrap());
+                flip_p[j].add_to_top(dec.pile.remove_from_top().unwrap());
             }
         }
 
@@ -83,9 +85,9 @@ impl Game {
 
         // Add 3 cards to temp deck and flip over
         let mut temp: Pile = Pile::new();
-        temp.add_to_top(dec.remove_from_top().unwrap());
-        temp.add_to_top(dec.remove_from_top().unwrap());
-        temp.add_to_top(dec.remove_from_top().unwrap());
+        temp.add_to_top(dec.pile.remove_from_top().unwrap());
+        temp.add_to_top(dec.pile.remove_from_top().unwrap());
+        temp.add_to_top(dec.pile.remove_from_top().unwrap());
 
         for i in 0..temp.get_pile_size() {
             temp.index(i).flip_card_up()
@@ -149,8 +151,8 @@ impl Game {
         for _ in 0..self.temp_deck.get_pile_size() {
             let mut card = self.temp_deck.remove_from_bottom().unwrap();
             card.flip_card_down();
-            self.deck.add_to_bottom(card);
-            card = self.deck.remove_from_top().unwrap();
+            self.deck.pile.add_to_bottom(card);
+            card = self.deck.pile.remove_from_top().unwrap();
             card.flip_card_up();
             self.temp_deck.add_to_top(card);
         }
@@ -190,7 +192,7 @@ impl Game {
 
     fn get_pile_reference(&self) -> Option<&Pile> {
         match self.get_integer_input() {
-            1 => Some(&self.deck),
+            1 => Some(&self.deck.pile),
             2 => Some(&self.flip_piles[0]),
             3 => Some(&self.flip_piles[1]),
             4 => Some(&self.flip_piles[2]),
@@ -258,7 +260,7 @@ impl Game {
 
         println!(
             "{:2}: {:3} {:3} {:3}               {:3} {:3} {:3} {:3}",
-            self.deck.get_pile_size(),
+            self.deck.pile.get_pile_size(),
             self.temp_deck.get_card_string(0),
             self.temp_deck.get_card_string(1),
             self.temp_deck.get_card_string(2),
