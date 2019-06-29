@@ -3,7 +3,7 @@ use core::ops::DerefMut;
 use super::pile::*;
 
 pub struct Deck {
-    pile: Pile
+    pile: Pile,
 }
 
 impl Deck {
@@ -26,9 +26,7 @@ impl Deck {
             p.add_to_top(Card::new(i, Suit::Diamond));
         }
 
-        Deck {
-            pile: p
-        }
+        Deck { pile: p }
     }
 }
 

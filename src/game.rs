@@ -1,9 +1,8 @@
-mod pile;
 mod deck;
+mod pile;
 
-use pile::*;
 use deck::*;
-
+use pile::*;
 use std::io;
 
 enum Actions {
