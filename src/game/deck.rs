@@ -1,4 +1,5 @@
 use core::ops::Deref;
+use core::ops::DerefMut;
 use super::pile::*;
 
 pub struct Deck {
@@ -35,5 +36,11 @@ impl Deref for Deck {
     type Target = Pile;
     fn deref(&self) -> &Pile {
         &self.pile
+    }
+}
+
+impl DerefMut for Deck {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.pile
     }
 }
