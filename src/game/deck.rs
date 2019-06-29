@@ -1,7 +1,8 @@
+use core::ops::Deref;
 use super::pile::*;
 
 pub struct Deck {
-    pub pile: Pile
+    pile: Pile
 }
 
 impl Deck {
@@ -27,5 +28,12 @@ impl Deck {
         Deck {
             pile: p
         }
+    }
+}
+
+impl Deref for Deck {
+    type Target = Pile;
+    fn deref(&self) -> &Pile {
+        &self.pile
     }
 }
