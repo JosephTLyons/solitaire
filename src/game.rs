@@ -4,6 +4,8 @@ mod pile;
 use deck::*;
 use pile::*;
 use std::io;
+use std::io::stdout;
+use std::io::Write;
 
 enum Actions {
     NextThreeCards,
@@ -12,22 +14,7 @@ enum Actions {
     Quit,
 }
 
-enum From {
-    TempDeck,
-    DepositPile1,
-    DepositPile2,
-    DepositPile3,
-    DepositPile4,
-    FlipPile1,
-    FlipPile2,
-    FlipPile3,
-    FlipPile4,
-    FlipPile5,
-    FlipPile6,
-    FlipPile7,
-}
-
-enum To {
+enum ChosenDeck {
     TempDeck,
     DepositPile1,
     DepositPile2,
@@ -89,7 +76,14 @@ impl Game {
         }
     }
 
-    pub fn take_turn(&mut self) {
+    pub fn play(&mut self) {
+        loop {
+            self.print();
+            self.take_turn()
+        }
+    }
+
+    fn take_turn(&mut self) {
         self.print_action_menu();
 
         loop {
@@ -152,12 +146,15 @@ impl Game {
         }
     }
 
-    fn move_card(&self) {
+    fn move_card(&mut self) {
         self.print_move_card_menu();
 
-        let mut from: Option<&Pile>;
+        let mut from: Option<&mut Pile>;
 
         loop {
+            print!("From: ");
+            stdout().flush().unwrap();
+
             from = self.get_pile_reference();
 
             if from.is_some() {
@@ -167,9 +164,12 @@ impl Game {
             }
         }
 
-        let mut to: Option<&Pile>;
+        let mut to: Option<&mut Pile>;
 
         loop {
+            print!("To: ");
+            stdout().flush().unwrap();
+
             to = self.get_pile_reference();
 
             if to.is_some() {
@@ -179,25 +179,31 @@ impl Game {
             }
         }
 
-        if self.move_is_valid(from.unwrap(), to.unwrap()) {
-            // move_card_from_to(from, to);
-        }
+        let card = self.temp_deck.remove_from_top().unwrap();
+        self.flip_piles[0].add_to_top(card);
+
+        // let thingy = from.unwrap().index(0).clone();
+        // let mabob = to.unwrap().index(0).clone();
+
+        // if self.move_to_deposit_pile_is_ok(&from.unwrap().index(0), &to.unwrap().index(0)) {
+        //     // move_card_from_to(from, to);
+        // }
     }
 
-    fn get_pile_reference(&self) -> Option<&Pile> {
+    fn get_pile_reference(&mut self) -> Option<&mut Pile> {
         match self.get_integer_input() {
-            1 => Some(&self.deck),
-            2 => Some(&self.flip_piles[0]),
-            3 => Some(&self.flip_piles[1]),
-            4 => Some(&self.flip_piles[2]),
-            5 => Some(&self.flip_piles[3]),
-            6 => Some(&self.flip_piles[4]),
-            7 => Some(&self.flip_piles[5]),
-            8 => Some(&self.flip_piles[6]),
-            9 => Some(&self.deposit_piles[0]),
-            10 => Some(&self.deposit_piles[1]),
-            11 => Some(&self.deposit_piles[2]),
-            12 => Some(&self.deposit_piles[3]),
+            1 => Some(&mut self.deck),
+            2 => Some(&mut self.flip_piles[0]),
+            3 => Some(&mut self.flip_piles[1]),
+            4 => Some(&mut self.flip_piles[2]),
+            5 => Some(&mut self.flip_piles[3]),
+            6 => Some(&mut self.flip_piles[4]),
+            7 => Some(&mut self.flip_piles[5]),
+            8 => Some(&mut self.flip_piles[6]),
+            9 => Some(&mut self.deposit_piles[0]),
+            10 => Some(&mut self.deposit_piles[1]),
+            11 => Some(&mut self.deposit_piles[2]),
+            12 => Some(&mut self.deposit_piles[3]),
             _ => None,
         }
     }
@@ -235,13 +241,13 @@ impl Game {
         //         return true;
         //     }
         // }
-        //
+
         false
     }
 
-    fn move_to_deposit_pil_is_ok(&self, card_on_top: &Card, card_on_bottom: &Card) -> bool {
-        if card_on_top.get_value() == card_on_bottom.get_value() + 1 {
-            if card_on_top.get_color() != card_on_bottom.get_color() {
+    fn move_to_deposit_pile_is_ok(&self, from: &Card, to: &Card) -> bool {
+        if from.get_value() == to.get_value() + 1 {
+            if from.get_color() != to.get_color() {
                 return true;
             }
         }
@@ -249,7 +255,7 @@ impl Game {
         false
     }
 
-    pub fn print(&self) {
+    fn print(&self) {
         print!("{}", String::from("\n").repeat(5));
 
         println!(
