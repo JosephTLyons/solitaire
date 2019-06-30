@@ -55,19 +55,8 @@ impl Game {
         let mut dec: Deck = Deck::new();
         dec.shuffle();
 
-        // Set up deposit piles
-        let mut deposit_p: Vec<Pile> = Vec::new();
-
-        for _ in 0..4 {
-            deposit_p.push(Pile::new());
-        }
-
         // Set up flip piles
-        let mut flip_p: Vec<Pile> = Vec::new();
-
-        for _ in 0..7 {
-            flip_p.push(Pile::new());
-        }
+        let mut flip_p: Vec<Pile> = vec![Pile::new(); 7];
 
         for i in 0..flip_p.len() {
             for j in i..flip_p.len() {
@@ -92,11 +81,10 @@ impl Game {
             temp.index(i).flip_card_up()
         }
 
-        // Wish I could use the vec! macro here instead of pushing onto the Vecs above
         Game {
             deck: dec,
             temp_deck: temp,
-            deposit_piles: deposit_p,
+            deposit_piles: vec![Pile::new(); 4],
             flip_piles: flip_p,
         }
     }
