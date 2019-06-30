@@ -5,6 +5,7 @@ use crate::game::pile::rand::Rng;
 pub use card::*;
 use std::collections::VecDeque;
 
+#[derive(Clone)]
 pub struct Pile {
     pile: VecDeque<Card>,
 }
