@@ -1,5 +1,4 @@
-use core::ops::Deref;
-use core::ops::DerefMut;
+use core::ops::{Deref, DerefMut};
 use super::pile::*;
 
 pub struct Deck {
