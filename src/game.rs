@@ -272,8 +272,12 @@ impl Game {
             }
         }
 
-        // Print pointer to useable card from deck
-        println!("            ^");
+        // Print dynamic pointer to next card in temp pile that we can access
+        println!(
+            "{}{}",
+            String::from("    ").repeat(self.temp_deck.get_pile_size()),
+            String::from("^"),
+        );
 
         for i in (0..flip_pile_print_count).rev() {
             println!(
