@@ -59,10 +59,10 @@ impl Game {
         let mut flip_p: Vec<Pile> = vec![Pile::new(); 7];
 
         for i in 0..flip_p.len() {
-            for j in i..flip_p.len() {
+            for pile in flip_p.iter_mut().skip(i) {
                 // In this case, I know that there will always be enough cards to remove from the
                 // dec, so it can be unwrapped
-                flip_p[j].add_to_top(dec.remove_from_top().unwrap());
+                pile.add_to_top(dec.remove_from_top().unwrap());
             }
         }
 
