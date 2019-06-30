@@ -135,10 +135,17 @@ impl Game {
     }
 
     fn next_three_cards(&mut self) {
+        let mut card;
+
+        // Put temp deck back
         for _ in 0..self.temp_deck.get_pile_size() {
-            let mut card = self.temp_deck.remove_from_bottom().unwrap();
+            card = self.temp_deck.remove_from_bottom().unwrap();
             card.flip_card_down();
             self.deck.add_to_bottom(card);
+        }
+
+        // Put 3 more cards into temp deck
+        for _ in 0..3 {
             card = self.deck.remove_from_top().unwrap();
             card.flip_card_up();
             self.temp_deck.add_to_top(card);
