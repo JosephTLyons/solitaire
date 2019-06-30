@@ -31,9 +31,10 @@ enum ChosenDeck {
 
 pub struct Game {
     deck: Deck,
-    temp_deck: Pile,
+    visible_deck_cards: Pile,
     deposit_piles: Vec<Pile>,
     flip_piles: Vec<Pile>,
+    temp_deck: Pile,
 }
 
 impl Game {
@@ -70,9 +71,10 @@ impl Game {
 
         Game {
             deck: dec,
-            temp_deck: temp,
+            visible_deck_cards: temp,
             deposit_piles: vec![Pile::new(); 4],
             flip_piles: flip_p,
+            temp_deck: Pile::new(),
         }
     }
 
@@ -132,8 +134,8 @@ impl Game {
         let mut card;
 
         // Put temp deck back
-        for _ in 0..self.temp_deck.get_pile_size() {
-            card = self.temp_deck.remove_from_bottom().unwrap();
+        for _ in 0..self.visible_deck_cards.get_pile_size() {
+            card = self.visible_deck_cards.remove_from_bottom().unwrap();
             card.flip_card_down();
             self.deck.add_to_bottom(card);
         }
@@ -142,7 +144,7 @@ impl Game {
         for _ in 0..3 {
             card = self.deck.remove_from_top().unwrap();
             card.flip_card_up();
-            self.temp_deck.add_to_top(card);
+            self.visible_deck_cards.add_to_top(card);
         }
     }
 
@@ -261,9 +263,9 @@ impl Game {
         println!(
             "{:2}: {:3} {:3} {:3}               {:3} {:3} {:3} {:3}",
             self.deck.get_pile_size(),
-            self.temp_deck.get_card_string(0),
-            self.temp_deck.get_card_string(1),
-            self.temp_deck.get_card_string(2),
+            self.visible_deck_cards.get_card_string(0),
+            self.visible_deck_cards.get_card_string(1),
+            self.visible_deck_cards.get_card_string(2),
             self.deposit_piles[0].get_card_string(0),
             self.deposit_piles[1].get_card_string(0),
             self.deposit_piles[2].get_card_string(0),
@@ -281,7 +283,7 @@ impl Game {
         // Print dynamic pointer to next card in temp pile that we can access
         println!(
             "{}{}",
-            String::from("    ").repeat(self.temp_deck.get_pile_size()),
+            String::from("    ").repeat(self.visible_deck_cards.get_pile_size()),
             String::from("^"),
         );
 

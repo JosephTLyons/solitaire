@@ -1,4 +1,4 @@
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub enum Suit {
     Spade,
     Heart,
@@ -18,6 +18,12 @@ pub struct Card {
     suit: Suit,
     color: Color,
     face_up: bool,
+}
+
+impl PartialEq for Card {
+    fn eq(&self, other: &Self) -> bool {
+        self as *const _ == other as *const _
+    }
 }
 
 impl Card {
