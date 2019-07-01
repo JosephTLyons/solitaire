@@ -67,7 +67,7 @@ impl Pile {
         self.pile.len()
     }
 
-    fn print(&self) {
+    pub fn print(&self) {
         for card in &self.pile {
             card.print();
         }
