@@ -95,6 +95,9 @@ impl Game {
 
     fn take_turn(&mut self) {
         self.print_action_menu();
+        println!();
+        print!("Choice: ");
+        stdout().flush().unwrap();
 
         loop {
             let input = self.get_integer_input();
