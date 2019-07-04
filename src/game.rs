@@ -62,18 +62,18 @@ impl Game {
         }
 
         // Add 3 cards to temp deck and flip over
-        let mut temp: Pile = Pile::new();
-        temp.add_to_top(dec.remove_from_top().unwrap());
-        temp.add_to_top(dec.remove_from_top().unwrap());
-        temp.add_to_top(dec.remove_from_top().unwrap());
+        let mut visible: Pile = Pile::new();
+        visible.add_to_top(dec.remove_from_top().unwrap());
+        visible.add_to_top(dec.remove_from_top().unwrap());
+        visible.add_to_top(dec.remove_from_top().unwrap());
 
-        for i in 0..temp.get_pile_size() {
-            temp.index(i).flip_card_up()
+        for i in 0..visible.get_pile_size() {
+            visible.index(i).flip_card_up()
         }
 
         Game {
             deck: dec,
-            visible_deck_cards: temp,
+            visible_deck_cards: visible,
             deposit_piles: vec![Pile::new(); 4],
             flip_piles: flip_p,
             temp_deck: Pile::new(),
@@ -162,64 +162,62 @@ impl Game {
     fn move_card(&mut self) {
         self.print_move_card_menu();
 
-        let mut from: Option<&Pile>;
+        let move_card: Card;
 
         loop {
             print!("From: ");
             stdout().flush().unwrap();
 
-            from = self.get_pile_reference();
-
-            if from.is_some() {
+            if let Some(x) = self.get_pile_reference() {
+                move_card = x.remove_from_top().unwrap();
                 break;
-            } else {
-                println!("Input needs to be a single integer 1 - 12")
+            }
+
+            else {
+                println!("Input needs to be a single integer 1 - 12");
             }
         }
 
-        let mut to: Option<&Pile>;
+        let to: &mut Pile;
 
         loop {
             print!("To: ");
             stdout().flush().unwrap();
 
-            to = self.get_pile_reference();
-
-            if to.is_some() {
+            if let Some(x) = self.get_pile_reference() {
+                to = x;
                 break;
-            } else {
-                println!("Input needs to be a single integer 1 - 12")
+            }
+
+            else {
+                println!("Input needs to be a single integer 1 - 12");
             }
         }
 
-        // Options:
-        //     Deck to Flip    (Deck to temp to Flip)
-        //     Flip to Flip    (Flip to temp to Flip)
-        //     Deposit to Flip (Deposit to temp to Flip)
-        //     Flip to Deposit (Flip to temp to Deposit)
+        to.add_to_top(move_card);
 
-        if self.move_to_flip_pile_ok(
-            &from.unwrap().clone().index(0),
-            &to.unwrap().clone().index(0),
-        ) {
-            to.unwrap().to_owned().add_to_top(from.unwrap().to_owned().remove_from_top().unwrap());
-        }
+        // if self.move_to_flip_pile_ok(
+        //     &from.unwrap().index(0),
+        //     &to.unwrap().clone().index(0),
+        // ) {
+        //     to.unwrap().to_owned().add_to_top(from.unwrap().to_owned().remove_from_top().unwrap());
+        // }
     }
 
-    fn get_pile_reference(&self) -> Option<&Pile> {
+    fn get_pile_reference(&mut self) -> Option<&mut Pile> {
         match self.get_integer_input() {
-            1 => Some(&self.visible_deck_cards),
-            2 => Some(&self.flip_piles[0]),
-            3 => Some(&self.flip_piles[1]),
-            4 => Some(&self.flip_piles[2]),
-            5 => Some(&self.flip_piles[3]),
-            6 => Some(&self.flip_piles[4]),
-            7 => Some(&self.flip_piles[5]),
-            8 => Some(&self.flip_piles[6]),
-            9 => Some(&self.deposit_piles[0]),
-            10 => Some(&self.deposit_piles[1]),
-            11 => Some(&self.deposit_piles[2]),
-            12 => Some(&self.deposit_piles[3]),
+            1 => Some(&mut self.visible_deck_cards),
+            2 => Some(&mut self.flip_piles[0]),
+            3 => Some(&mut self.flip_piles[1]),
+            4 => Some(&mut self.flip_piles[2]),
+            5 => Some(&mut self.flip_piles[3]),
+            6 => Some(&mut self.flip_piles[4]),
+            7 => Some(&mut self.flip_piles[5]),
+            8 => Some(&mut self.flip_piles[6]),
+            9 => Some(&mut self.deposit_piles[0]),
+            10 => Some(&mut self.deposit_piles[1]),
+            11 => Some(&mut self.deposit_piles[2]),
+            12 => Some(&mut self.deposit_piles[3]),
             _ => None,
         }
     }

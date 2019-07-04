@@ -21,6 +21,10 @@ impl Pile {
         &mut self.pile[index]
     }
 
+    // pub fn get_internal_vec(&mut self) -> &mut VecDeque<Card> {
+    //     &mut self.pile;
+    // }
+
     fn is_card_flipped_up(&self, pos: usize) -> bool {
         self.pile[pos].is_flipped_up()
     }
