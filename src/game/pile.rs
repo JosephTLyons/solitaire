@@ -6,14 +6,23 @@ pub use card::*;
 use std::collections::VecDeque;
 
 #[derive(Clone)]
+pub enum PileType {
+    Deposit,
+    Flip,
+    Deck,
+}
+
+#[derive(Clone)]
 pub struct Pile {
     pile: VecDeque<Card>,
+    pile_type: PileType,
 }
 
 impl Pile {
-    pub fn new() -> Self {
+    pub fn new(p_type: PileType) -> Self {
         Pile {
             pile: VecDeque::new(),
+            pile_type: p_type,
         }
     }
 
@@ -69,6 +78,10 @@ impl Pile {
 
     pub fn get_pile_size(&self) -> usize {
         self.pile.len()
+    }
+
+    pub fn get_pile_type(&self) -> &PileType {
+        &self.pile_type
     }
 
     pub fn print(&self) {

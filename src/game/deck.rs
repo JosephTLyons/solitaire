@@ -7,7 +7,7 @@ pub struct Deck {
 
 impl Deck {
     pub fn new() -> Self {
-        let mut p = Pile::new();
+        let mut p = Pile::new(PileType::Deck);
 
         for i in 1..14 {
             p.add_to_top(Card::new(i, Suit::Spade));

@@ -46,7 +46,7 @@ impl Game {
         dec.shuffle();
 
         // Set up flip piles
-        let mut flip_p: Vec<Pile> = vec![Pile::new(); 7];
+        let mut flip_p: Vec<Pile> = vec![Pile::new(PileType::Flip); 7];
 
         for i in 0..flip_p.len() {
             for pile in flip_p.iter_mut().skip(i) {
@@ -62,7 +62,7 @@ impl Game {
         }
 
         // Add 3 cards to temp deck and flip over
-        let mut visible: Pile = Pile::new();
+        let mut visible: Pile = Pile::new(PileType::Deck);
         visible.add_to_top(dec.remove_from_top().unwrap());
         visible.add_to_top(dec.remove_from_top().unwrap());
         visible.add_to_top(dec.remove_from_top().unwrap());
@@ -74,9 +74,9 @@ impl Game {
         Game {
             deck: dec,
             visible_deck_cards: visible,
-            deposit_piles: vec![Pile::new(); 4],
+            deposit_piles: vec![Pile::new(PileType::Deposit); 4],
             flip_piles: flip_p,
-            temp_deck: Pile::new(),
+            temp_deck: Pile::new(PileType::Deck),
             should_quit: false,
             won: false,
         }
@@ -194,14 +194,19 @@ impl Game {
             }
         }
 
-        to.add_to_top(move_card);
-
-        // if self.move_to_flip_pile_ok(
-        //     &from.unwrap().index(0),
-        //     &to.unwrap().clone().index(0),
-        // ) {
-        //     to.unwrap().to_owned().add_to_top(from.unwrap().to_owned().remove_from_top().unwrap());
-        // }
+        match to.get_pile_type() {
+            Deposit => {
+                if self.move_to_deposit_pile_ok(&move_card, to.index(0)) {
+                    to.add_to_top(move_card);
+                }
+            },
+            Flip => {
+                if self.move_to_flip_pile_ok(&move_card, to.index(0)) {
+                    to.add_to_top(move_card);
+                }
+            },
+            Deck => {},
+        }
     }
 
     fn get_pile_reference(&mut self) -> Option<&mut Pile> {
